@@ -1,7 +1,11 @@
 /* Project Seagull Stylesheet */
 
 body {
+    /* Background */
     background-color: skyblue;
+
+    /* Layout */
+    overflow: hidden;
 }
 
 .p5Canvas {

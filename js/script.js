@@ -19,6 +19,8 @@ function setup() {
     canvas.position(0, 0); //move canvas to the origin
     if (DEBUG) console.log(
         "Created New Canvas: (" + windowWidth + ", " + windowHeight + ")");
+
+    noStroke(); //No Stroke border
 }
 
 /* Runs on screen resize */
@@ -30,5 +32,10 @@ function windowResized() {
 
 /* Runs every cycle */
 function draw() {
-    background(200, 200, 255);
+    //Clear the screen
+    clear();
+
+    //Draw a circle
+    fill('Yellow');
+    ellipse(mouseX, mouseY, 10, 10);
 }
