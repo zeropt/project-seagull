@@ -3,3 +3,8 @@
 body {
     background-color: skyblue;
 }
+
+.p5Canvas {
+    /* Move canvas to the back */
+    z-index: -1;
+}
