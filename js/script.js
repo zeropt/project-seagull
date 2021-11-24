@@ -14,19 +14,19 @@ let pivot;
 //Animation Heading
 let animationHeading = {
     theta: 0.0,
-    pvMin: 0.0,
-    pvMax: 7.0,
+    spMin: 0.0,
+    spMax: 7.0,
     w: 0.0,
     kP: 0.2, //Springiness
     kD: 0.3, //Dampener
     wLimit: 0.4, //rad/cycle
-    update: function(pv) {
-        //Limit pv
-        if (pv < this.pvMin) pv = this.pvMin;
-        if (pv > this.pvMax) pv = this.pvMax;
+    update: function(sp) {
+        //Limit sp
+        if (sp < this.spMin) sp = this.spMin;
+        if (sp > this.spMax) sp = this.spMax;
 
         //Calculate Angular Acceleration
-        let error = pv - this.theta;
+        let error = sp - this.theta;
         let a = this.kP*error - this.kD*this.w;
 
         //Update Angular Velocity
@@ -54,8 +54,8 @@ function setup() {
     updatePivot();
 
     //Animation Heading
-    animationHeading.pvMin = -(3/4)*PI;
-    animationHeading.pvMax = -(1/4)*PI;
+    animationHeading.spMin = -(3/4)*PI;
+    animationHeading.spMax = -(1/4)*PI;
 
     //p5 settings
     noStroke(); //No Stroke border
