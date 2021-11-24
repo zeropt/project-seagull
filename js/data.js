@@ -5,13 +5,15 @@
  */
 
 //This object stores all the data for the individual birds
+//keyframe data currently must be sorted by [in] lowest -> highest
 let birds = [
     {
         name: "Western Gull",
         description: "",
         keyframes: {
             body: [
-                {in: 0, x: 0, y: 0, angle: 0}
+                {in: -3, x: 0, y: 0, angle: 0},
+                {in: 0, x: 100, y: -100, angle: 6.28}
             ],
             head: [
                 {in: 0, x: 0, y: 0, angle: 0}
@@ -21,4 +23,4 @@ let birds = [
             ]
         }
     }
-]
+];
