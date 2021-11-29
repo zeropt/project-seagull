@@ -10,6 +10,7 @@ const DEBUG = true;
 //Global variables
 let canvas;
 let pivot;
+let bird_i;
 
 //Animation Heading
 let animationHeading = {
@@ -20,7 +21,7 @@ let animationHeading = {
     kP: 0.2, //Springiness
     kD: 0.3, //Dampener
     wLimit: 0.4, //rad/cycle
-    update: function(sp) {
+    update: function (sp) {
         //Limit sp
         if (sp < this.spMin) sp = this.spMin;
         if (sp > this.spMax) sp = this.spMax;
@@ -36,6 +37,9 @@ let animationHeading = {
 
         //Update heading
         this.theta += this.w;
+    },
+    get: function () {
+        return this.theta;
     }
 };
 
@@ -52,6 +56,13 @@ function setup() {
     //Set the pivot point
     pivot = createVector(0, 0);
     updatePivot();
+
+    //Set initial bird index
+    bird_i = 0;
+
+    //Image Elements
+    createBirdElements();
+    loadSrc(birds[bird_i]);
 
     //Animation Heading
     animationHeading.spMin = -(3/4)*PI;
@@ -82,16 +93,36 @@ function draw() {
 
     //Calculate the animation heading
     animationHeading.update(pointerTheta);
+    let theta = animationHeading.get();
 
     //Draw the animation
-    let v = createVector(1, 0);
-    v.setMag(height*0.8);
-    v.setHeading(animationHeading.theta);
-    push();
-    strokeWeight(32);
-    stroke('White');
-    line(pivot.x, pivot.y, pivot.x + v.x, pivot.y + v.y);
-    pop();
+}
+
+/* Create the image elements */
+function createBirdElements() {
+    if (DEBUG) console.log("creating image elements");
+    //Create the elements
+    let bodyImg = createImg("", "");
+    let headImg = createImg("", "");
+    let jawImg = createImg("", "");
+
+    //Set the class
+    bodyImg.class("animation");
+    headImg.class("animation");
+    jawImg.class("animation");
+
+    //Set the IDs
+    bodyImg.id("body-img");
+    headImg.id("head-img");
+    jawImg.id("jaw-img");
+}
+
+/* assigns the image sources */
+function loadSrc(bird) {
+    if (DEBUG) console.log("setting the image sources");
+    select("#body-img").attribute("src", bird.body.src);
+    select("#head-img").attribute("src", bird.head.src);
+    select("#jaw-img").attribute("src", bird.jaw.src);
 }
 
 /* Updates the pivot position */
