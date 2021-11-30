@@ -4,6 +4,8 @@
  * License: Public Domain
  */
 
+let birdIndex = 0;
+
 let _pi = 3.14159265;
 
 //This object stores all the data for the individual birds
