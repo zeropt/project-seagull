@@ -9,6 +9,11 @@ body {
 }
 
 .p5Canvas {
-    /* Move canvas to the back */
+    /* Positioning */
+    z-index: -2;
+}
+
+.animation {
+    /* Positioning */
     z-index: -1;
 }
