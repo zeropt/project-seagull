@@ -125,8 +125,17 @@ function loadSrc(bird) {
     select("#jaw-img").attribute("src", bird.jaw.src);
 }
 
+/* Sclaes the image elements */
+function setSizes(bird) {
+    select("#body-img").size(bird.body.width, bird.body.height);
+    select("#head-img").size(bird.head.width, bird.head.height);
+    select("#jaw-img").size(bird.jaw.width, bird.jaw.height);
+}
+
 /* Draws the animation */
 function drawBird(bird, input) {
+    //Set the size of the images
+    setSizes(bird);
     //Position the body
     let bodyPos = keyframeMap(bird.body.keyframes, input);
     let vBody = createVector(bodyPos.x, bodyPos.y);
@@ -142,6 +151,36 @@ function drawBird(bird, input) {
     let head = select("#head-img");
     positionElement(head, vHead.x, vHead.y);
     rotateElement(head, headPos.angle);
+
+    //Position the jaw
+    let jawPos = keyframeMap(bird.jaw.keyframes, input);
+    let vJaw = createVector(jawPos.x, jawPos.y);
+    vJaw.rotate(headPos.angle);
+    vJaw.add(vHead);
+    let jaw = select("#jaw-img");
+    positionElement(jaw, vJaw.x, vJaw.y);
+    rotateElement(jaw, headPos.angle + jawPos.angle);
+
+    //Draw the neck
+    //body neck
+    let bodyNeckPos = keyframeMap(bird.neck.bodyEnd.keyframes, input);
+    let p1 = createVector(bodyNeckPos.x, bodyNeckPos.y);
+    p1.rotate(bodyPos.angle);
+    p1.add(vBody);
+    let c1 = createVector(bodyNeckPos.mag, 0);
+    c1.setHeading(bodyPos.angle + bodyNeckPos.angle);
+    //head neck
+    let headNeckPos = keyframeMap(bird.neck.headEnd.keyframes, input);
+    let p2 = createVector(headNeckPos.x, headNeckPos.y);
+    p2.rotate(headPos.angle);
+    p2.add(vHead);
+    let c2 = createVector(headNeckPos.mag, 0);
+    c2.setHeading(headPos.angle + headNeckPos.angle);
+    //draw!
+    //console.log(`1: (${p1.x}, ${p1.y}), (${c1.x}, ${c1.y}), ${bird.neck.bodyEnd.width}`);
+    //console.log(`2: (${p2.x}, ${p2.y}), (${c2.x}, ${c2.y}), ${bird.neck.headEnd.width}`);
+    drawNeck(bird.neck.color, p1, c1, bird.neck.bodyEnd.width,
+        p2, c2, bird.neck.headEnd.width);
 }
 
 /* Updates the pivot position */
@@ -164,7 +203,8 @@ function keyframeMap(kfData, input) {
     let output = {
         x: 0,
         y: 0,
-        angle: 1
+        angle: 0,
+        mag: 0
     };
 
     //if the input is outside the keyframing space,
@@ -173,11 +213,13 @@ function keyframeMap(kfData, input) {
         output.x = kfData[0].x;
         output.y = kfData[0].y;
         output.angle = kfData[0].angle;
+        output.mag = kfData[0].mag;
 
     } else if (input >= kfData[kfData.length - 1].in) {
         output.x = kfData[kfData.length - 1].x;
         output.y = kfData[kfData.length - 1].y;
         output.angle = kfData[kfData.length - 1].angle;
+        output.mag = kfData[kfData.length - 1].mag;
 
     } else { //use the two frames around it to produce a value
         for (let i = 1; i < kfData.length; i++) {
@@ -192,6 +234,7 @@ function keyframeMap(kfData, input) {
                 output.x = lo.x + (hi.x - lo.x) * p;
                 output.y = lo.y + (hi.y - lo.y) * p;
                 output.angle = lo.angle + (hi.angle - lo.angle) * p;
+                output.mag = lo.mag + (hi.mag - lo.mag) * p;
             }
         }
     }
@@ -213,4 +256,40 @@ function positionElement(element, x, y) {
 function rotateElement(element, theta) {
     //Rotate the element using a css property
     element.style("transform", "rotate(" + theta + "rad)");
+}
+
+/* Draws the neck using two bezier curves */
+/* (ColorString, point1, directionVector1, neckWidth1,
+    point2, directionVector2, neckWidth2) */
+function drawNeck(color, p1, c1, w1, p2, c2, w2) {
+    push(); //beginning
+    //Set the color
+    stroke(color);
+    noFill();
+    //Calculate and set the stroke weight
+    let weight;
+    if (w2 > w1) weight = w2/2;
+    else weight = w1/2;
+    strokeWeight(weight);
+
+    //first end
+    let offset1 = c1.copy();
+    offset1.rotate(PI/2);
+    offset1.setMag((w1-weight)/2);
+    let a1 = p1.copy().add(offset1);
+    let b1 = p1.copy().sub(offset1);
+
+    //second end
+    let offset2 = c2.copy();
+    offset2.rotate(-PI/2);
+    offset2.setMag((w2-weight)/2);
+    let a2 = p2.copy().add(offset2);
+    let b2 = p2.copy().sub(offset2);
+
+    //Draw the curves
+    bezier(a1.x, a1.y, a1.x + c1.x, a1.y + c1.y,
+        a2.x + c2.x, a2.y + c2.y, a2.x, a2.y);
+    bezier(b1.x, b1.y, b1.x + c1.x, b1.y + c1.y,
+        b2.x + c2.x, b2.y + c2.y, b2.x, b2.y);
+    pop(); //end
 }
