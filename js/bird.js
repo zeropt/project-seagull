@@ -10,6 +10,7 @@ const DEBUG = true;
 //Global variables
 let canvas;
 let pivot;
+let scale;
 
 //Animation Heading
 let animationHeading = {
@@ -56,6 +57,9 @@ function setup() {
     pivot = createVector(0, 0);
     updatePivot();
 
+    //Set the scale
+    updateScale();
+
     //Set initial bird index
     birdIndex = 0;
 
@@ -80,6 +84,9 @@ function windowResized() {
 
     //Update the pivot position
     updatePivot();
+
+    //Update the scale
+    updateScale();
 }
 
 /* Runs every cycle */
@@ -95,7 +102,7 @@ function draw() {
     let theta = animationHeading.get();
 
     //Draw the animation
-    drawBird(birds[birdIndex], theta);
+    drawBird(birds[birdIndex], theta, scale);
 }
 
 /* Create the image elements */
@@ -125,67 +132,72 @@ function loadSrc(bird) {
     select("#jaw-img").attribute("src", bird.jaw.src);
 }
 
-/* Sclaes the image elements */
-function setSizes(bird) {
-    select("#body-img").size(bird.body.width, bird.body.height);
-    select("#head-img").size(bird.head.width, bird.head.height);
-    select("#jaw-img").size(bird.jaw.width, bird.jaw.height);
-}
-
 /* Draws the animation */
-function drawBird(bird, input) {
-    //Set the size of the images
-    setSizes(bird);
+function drawBird(bird, input, scale=1.0) {
     //Position the body
     let bodyPos = keyframeMap(bird.body.keyframes, input);
     let vBody = createVector(bodyPos.x, bodyPos.y);
+    vBody.mult(scale);
     vBody.add(pivot);
     let body = select("#body-img");
     positionElement(body, vBody.x, vBody.y);
-    rotateElement(body, bodyPos.angle);
+    rotateScaleElement(body, bodyPos.angle, bird.body.scale*scale);
 
     //Position the head
     let headPos = keyframeMap(bird.head.keyframes, input);
     let vHead = createVector(headPos.x, headPos.y);
+    vHead.mult(scale);
     vHead.add(pivot);
     let head = select("#head-img");
     positionElement(head, vHead.x, vHead.y);
-    rotateElement(head, headPos.angle);
+    rotateScaleElement(head, headPos.angle, bird.head.scale*scale);
 
     //Position the jaw
     let jawPos = keyframeMap(bird.jaw.keyframes, input);
     let vJaw = createVector(jawPos.x, jawPos.y);
+    vJaw.mult(scale);
     vJaw.rotate(headPos.angle);
     vJaw.add(vHead);
     let jaw = select("#jaw-img");
     positionElement(jaw, vJaw.x, vJaw.y);
-    rotateElement(jaw, headPos.angle + jawPos.angle);
+    rotateScaleElement(
+        jaw, headPos.angle + jawPos.angle, bird.jaw.scale*scale);
 
     //Draw the neck
     //body neck
     let bodyNeckPos = keyframeMap(bird.neck.bodyEnd.keyframes, input);
     let p1 = createVector(bodyNeckPos.x, bodyNeckPos.y);
     p1.rotate(bodyPos.angle);
+    p1.mult(scale);
     p1.add(vBody);
     let c1 = createVector(bodyNeckPos.mag, 0);
     c1.setHeading(bodyPos.angle + bodyNeckPos.angle);
+    c1.mult(scale);
     //head neck
     let headNeckPos = keyframeMap(bird.neck.headEnd.keyframes, input);
     let p2 = createVector(headNeckPos.x, headNeckPos.y);
     p2.rotate(headPos.angle);
+    p2.mult(scale);
     p2.add(vHead);
     let c2 = createVector(headNeckPos.mag, 0);
     c2.setHeading(headPos.angle + headNeckPos.angle);
+    c2.mult(scale);
     //draw!
     //console.log(`1: (${p1.x}, ${p1.y}), (${c1.x}, ${c1.y}), ${bird.neck.bodyEnd.width}`);
     //console.log(`2: (${p2.x}, ${p2.y}), (${c2.x}, ${c2.y}), ${bird.neck.headEnd.width}`);
-    drawNeck(bird.neck.color, p1, c1, bird.neck.bodyEnd.width,
-        p2, c2, bird.neck.headEnd.width);
+    drawNeck(bird.neck.color, p1, c1, bird.neck.bodyEnd.width*scale,
+        p2, c2, bird.neck.headEnd.width*scale);
 }
 
 /* Updates the pivot position */
 function updatePivot() {
     pivot.set(width/2, height);
+}
+
+/* Updates the scale to minDimension/1000 */
+function updateScale() {
+    if (width < height) scale = width/1000;
+    else scale = height/1000;
 }
 
 /* Calculates the the pointer heading */
@@ -253,9 +265,9 @@ function positionElement(element, x, y) {
 }
 
 /* Rotate an element about its center in radians */
-function rotateElement(element, theta) {
+function rotateScaleElement(element, theta, scale=1.0) {
     //Rotate the element using a css property
-    element.style("transform", "rotate(" + theta + "rad)");
+    element.style("transform", `rotate(${theta}rad) scale(${scale})`);
 }
 
 /* Draws the neck using two bezier curves */
@@ -268,8 +280,8 @@ function drawNeck(color, p1, c1, w1, p2, c2, w2) {
     noFill();
     //Calculate and set the stroke weight
     let weight;
-    if (w2 > w1) weight = w2/2;
-    else weight = w1/2;
+    if (w2 > w1) weight = w1;
+    else weight = w2;
     strokeWeight(weight);
 
     //first end
