@@ -11,6 +11,10 @@ const DEBUG = true;
 let canvas;
 let pivot;
 let scale;
+let scremThresh;
+let SCREM;
+
+const shakeMag = 20;
 
 //Animation Heading
 let animationHeading = {
@@ -71,6 +75,10 @@ function setup() {
     animationHeading.spMin = -(7/8)*PI;
     animationHeading.spMax = -(1/8)*PI;
 
+    //Screm Variables
+    scremThresh = -(1/4)*PI;
+    SCREM = false;
+
     //p5 settings
     noStroke(); //No Stroke border
 }
@@ -101,8 +109,16 @@ function draw() {
     animationHeading.update(pointerTheta);
     let theta = animationHeading.get();
 
+    //Check for screm
+    SCREM = (theta >= scremThresh);
+    if (DEBUG && SCREM) console.log("SCREM!");
+
+    //Shake vector
+    let shake = createVector(0, 0);
+    if (SCREM) shake = shakeVector(shakeMag*scale);
+
     //Draw the animation
-    drawBird(birds[birdIndex], theta, scale);
+    drawBird(birds[birdIndex], theta, shake, scale);
 }
 
 /* Create the image elements */
@@ -133,12 +149,13 @@ function loadSrc(bird) {
 }
 
 /* Draws the animation */
-function drawBird(bird, input, scale=1.0) {
+function drawBird(bird, input, shift, scale=1.0) {
     //Position the body
     let bodyPos = keyframeMap(bird.body.keyframes, input);
     let vBody = createVector(bodyPos.x, bodyPos.y);
     vBody.mult(scale);
     vBody.add(pivot);
+    vBody.add(shift);
     let body = select("#body-img");
     positionElement(body, vBody.x, vBody.y);
     rotateScaleElement(body, bodyPos.angle, bird.body.scale*scale);
@@ -148,6 +165,7 @@ function drawBird(bird, input, scale=1.0) {
     let vHead = createVector(headPos.x, headPos.y);
     vHead.mult(scale);
     vHead.add(pivot);
+    vHead.add(shift);
     let head = select("#head-img");
     positionElement(head, vHead.x, vHead.y);
     rotateScaleElement(head, headPos.angle, bird.head.scale*scale);
@@ -158,6 +176,7 @@ function drawBird(bird, input, scale=1.0) {
     vJaw.mult(scale);
     vJaw.rotate(headPos.angle);
     vJaw.add(vHead);
+    vJaw.add(shift);
     let jaw = select("#jaw-img");
     positionElement(jaw, vJaw.x, vJaw.y);
     rotateScaleElement(
@@ -170,6 +189,7 @@ function drawBird(bird, input, scale=1.0) {
     p1.rotate(bodyPos.angle);
     p1.mult(scale);
     p1.add(vBody);
+    p1.add(shift);
     let c1 = createVector(bodyNeckPos.mag, 0);
     c1.setHeading(bodyPos.angle + bodyNeckPos.angle);
     c1.mult(scale);
@@ -179,6 +199,7 @@ function drawBird(bird, input, scale=1.0) {
     p2.rotate(headPos.angle);
     p2.mult(scale);
     p2.add(vHead);
+    p2.add(shift);
     let c2 = createVector(headNeckPos.mag, 0);
     c2.setHeading(headPos.angle + headNeckPos.angle);
     c2.mult(scale);
@@ -198,6 +219,14 @@ function updatePivot() {
 function updateScale() {
     if (width < height) scale = width/1000;
     else scale = height/1000;
+}
+
+/* Returns a random vector used for shaking */
+function shakeVector(maxMag) {
+    //Random direction
+    let v = p5.Vector.random2D();
+    v.setMag(random(maxMag));
+    return v;
 }
 
 /* Calculates the the pointer heading */

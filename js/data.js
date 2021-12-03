@@ -17,40 +17,40 @@ let birds = [
         description: "",
         body: {
             src: "img/test-body.jpg",
-            scale: 3.0,
+            scale: 2.0,
             keyframes: [
-                {in: (0)*_pi, x: 0, y: -160, angle: (0)*_pi}
+                {in: (0)*_pi, x: 0, y: -106, angle: (0)*_pi}
             ]
         },
         head: {
             src: "img/test-head.jpg",
-            scale: 3.0,
+            scale: 2.0,
             keyframes: [
-                {in: (-1)*_pi, x: -600, y: -450, angle: (-3/4)*_pi},
+                {in: (-1)*_pi, x: -400, y: -300, angle: (-3/4)*_pi},
                 {in: (-1/2)*_pi, x: 0, y: -600, angle: (-1/2)*_pi},
-                {in: (0)*_pi, x: 900, y: -900, angle: (-1/8)*_pi}
+                {in: (0)*_pi, x: 500, y: -400, angle: (-1/8)*_pi}
             ]
         },
         jaw: {
             src: "img/test-head.jpg",
-            scale: 1.5,
+            scale: 1.0,
             keyframes: [
-                {in: (-1)*_pi, x: 0, y: 120, angle: (-1/4)*_pi},
-                {in: (0)*_pi, x: 0, y: 180, angle: (1/4)*_pi},
+                {in: (-1)*_pi, x: 0, y: 80, angle: (-1/4)*_pi},
+                {in: (0)*_pi, x: 0, y: 120, angle: (1/4)*_pi},
             ]
         },
         neck: {
             color: "#FFFFFF",
             bodyEnd: {
-                width: 240,
+                width: 160,
                 keyframes: [
-                    {in: (0)*_pi, x: 120, y: -90, angle: (-3/8)*_pi, mag: 150}
+                    {in: (0)*_pi, x: 80, y: -60, angle: (-3/8)*_pi, mag: 100}
                 ]
             },
             headEnd: {
-                width: 120,
+                width: 80,
                 keyframes: [
-                    {in: (0)*_pi, x: -180, y: 120, angle: (3/4)*_pi, mag: 30}
+                    {in: (0)*_pi, x: -120, y: 80, angle: (3/4)*_pi, mag: 20}
                 ]
             }
         }
