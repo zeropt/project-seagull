@@ -58,7 +58,7 @@ let birds = [
 
     {
         name: "Bonaparte's Gull",
-        description: "",
+        description: "The Bonaparte’s Gull can be found in forests of Canada and Southern regions of Alaska during their nesting season and migrates south to warmer areas of North America in the winter. The audacious Bonaparte’s Gull are unique in the fact that they often nest in the trees because the ground is just not fancy enough for their taste. Unlike their thrifty cousins, the Western Gull, Bonaparte’s Gulls generally are not found foraging garbage dumps like an all-you-can-eat buffet. However, the scavenger blood still flows within them, enacting thievery against smaller coastal birds for a meal. Criminal!",
         body: {
             src: "img/bonaparte-gull-body.png",
             scale: 1.0,
