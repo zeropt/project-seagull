@@ -59,13 +59,9 @@ function setup() {
 
     //Set the pivot point
     pivot = createVector(0, 0);
-    updatePivot();
 
-    //Set the scale
-    updateScale();
-
-    //update the background image
-    updateBackground();
+    //Update stuff
+    updateStuff();
 
     //Set initial bird index
     birdIndex = 0;
@@ -75,11 +71,11 @@ function setup() {
     loadSrc(birds[birdIndex]);
 
     //Animation Heading
-    animationHeading.spMin = -(7/8)*PI;
-    animationHeading.spMax = -(1/8)*PI;
+    animationHeading.spMin = -(3/4)*PI;
+    animationHeading.spMax = -(1/4)*PI;
 
     //Screm Variables
-    scremThresh = -(1/4)*PI;
+    scremThresh = -(3/8)*PI;
     SCREM = false;
 
     //p5 settings
@@ -93,14 +89,7 @@ function windowResized() {
     if (DEBUG) console.log(
         "Canvas Resized: (" + windowWidth + ", " + windowHeight + ")");
 
-    //Update the pivot position
-    updatePivot();
-
-    //Update the scale
-    updateScale();
-
-    //update the background image
-    updateBackground();
+    updateStuff();
 }
 
 /* Runs every cycle */
@@ -110,6 +99,7 @@ function draw() {
 
     //Calculate the pointer heading
     let pointerTheta = pointerHeading(pivot);
+    if (pointerTheta > 0.0) pointerTheta *= -1.0;
 
     //Calculate the animation heading
     animationHeading.update(pointerTheta);
@@ -129,6 +119,8 @@ function draw() {
     //Draw guides
     drawGuides(theta, SCALE);
 }
+
+/******************** Bird Element Functions ********************/
 
 /* Create the image elements */
 function createBirdElements() {
@@ -156,6 +148,127 @@ function loadSrc(bird) {
     select("#head-img").attribute("src", bird.head.src);
     select("#jaw-img").attribute("src", bird.jaw.src);
 }
+
+/******************** Screen Update Functions ********************/
+
+/* All the update functions in required order */
+function updateStuff() {
+    //Update the scale
+    updateScale();
+
+    //Update the pivot position
+    updatePivot();
+
+    //update the background image
+    updateBackground();
+}
+
+/* Updates the scale to minDimension/1000 */
+function updateScale() {
+    if (width < height) SCALE = width/1000;
+    else SCALE = height/1000;
+}
+
+/* Updates the pivot position */
+function updatePivot() {
+    let xOffset = -140*SCALE;
+    let yOffset = -300*SCALE;
+    pivot.set(width/2 + xOffset, height + yOffset);
+}
+
+/* Updates the background image */
+function updateBackground() {
+    if (DEBUG) console.log("Updating the background image!");
+    let bg = select("#background-img");
+    bg.size(AUTO, SCALE*1000);
+    let xOffset = 200*SCALE;
+    let yOffset = -500*SCALE;
+    positionElement(bg, width/2 + xOffset, height + yOffset);
+}
+
+/******************** Utility Functions ********************/
+
+/* Returns a random vector used for shaking */
+function shakeVector(maxMag) {
+    //Random direction
+    let v = p5.Vector.random2D();
+    v.setMag(random(maxMag));
+    return v;
+}
+
+/* Calculates the the pointer heading */
+function pointerHeading(origin) {
+    //Create a vector from the origin to the pointer
+    let v = createVector(mouseX - origin.x, mouseY - origin.y);
+
+    //Return the vector heading
+    return v.heading();
+}
+
+/* Calculates position based on input and keyframes */
+function keyframeMap(kfData, input) {
+    //output object
+    let output = {
+        x: 0,
+        y: 0,
+        angle: 0,
+        mag: 0
+    };
+
+    //if the input is outside the keyframing space,
+    //set the output to the first or last frame
+    if (input <= kfData[0].in) {
+        output.x = kfData[0].x;
+        output.y = kfData[0].y;
+        output.angle = kfData[0].angle;
+        output.mag = kfData[0].mag;
+
+    } else if (input >= kfData[kfData.length - 1].in) {
+        output.x = kfData[kfData.length - 1].x;
+        output.y = kfData[kfData.length - 1].y;
+        output.angle = kfData[kfData.length - 1].angle;
+        output.mag = kfData[kfData.length - 1].mag;
+
+    } else { //use the two frames around it to produce a value
+        for (let i = 1; i < kfData.length; i++) {
+
+            //grab the surrounding frames
+            let lo = kfData[i - 1];
+            let hi = kfData[i];
+
+            //if input is in-between them
+            if (lo.in <= input && input < hi.in) {
+                let p = (input - lo.in) / (hi.in - lo.in);
+                output.x = lo.x + (hi.x - lo.x) * p;
+                output.y = lo.y + (hi.y - lo.y) * p;
+                output.angle = lo.angle + (hi.angle - lo.angle) * p;
+                output.mag = lo.mag + (hi.mag - lo.mag) * p;
+            }
+        }
+    }
+
+    return output;
+}
+
+/******************** Element Transform Functions ********************/
+
+/* Position an element about its center */
+function positionElement(element, x, y) {
+    //center the element
+    x -= element.width/2;
+    y -= element.height/2;
+
+    //set using the position(x, y) function
+    element.position(x, y);
+}
+
+/* Rotate an element about its center in radians */
+function rotateScaleElement(element, theta, scale=1.0) {
+    //Rotate the element using a css property
+    element.style("transform", `rotate(${theta}rad) scale(${scale})`);
+}
+
+/******************** Bird Drawing Functions ********************/
 
 /* Draws the animation */
 function drawBird(bird, input, shift, scale=1.0) {
@@ -229,110 +342,13 @@ function drawGuides(theta, scale) {
 
     //Box
     let w = scale*1000;
-    rect(pivot.x - w/2, pivot.y - w, w, w);
+    rect(pivot.x - w/2, pivot.y - w/2, w, w);
 
     //line
     let v = createVector(w, 0);
     v.setHeading(theta);
     line(pivot.x, pivot.y, pivot.x + v.x, pivot.y + v.y);
     pop();
-}
-
-/* Updates the pivot position */
-function updatePivot() {
-    pivot.set(width/2, height);
-}
-
-/* Updates the scale to minDimension/1000 */
-function updateScale() {
-    if (width < height) SCALE = width/1000;
-    else SCALE = height/1000;
-}
-
-/* Updates the background image */
-function updateBackground() {
-    if (DEBUG) console.log("Updating the background image!");
-    let bg = select("#background-img");
-    bg.size(AUTO, SCALE*1000);
-    positionElement(bg, width/2, height - (SCALE*1000)/2);
-}
-
-/* Returns a random vector used for shaking */
-function shakeVector(maxMag) {
-    //Random direction
-    let v = p5.Vector.random2D();
-    v.setMag(random(maxMag));
-    return v;
-}
-
-/* Calculates the the pointer heading */
-function pointerHeading(origin) {
-    //Create a vector from the origin to the pointer
-    let v = createVector(mouseX - origin.x, mouseY - origin.y);
-
-    //Return the vector heading
-    return v.heading();
-}
-
-/* Calculates position based on input and keyframes */
-function keyframeMap(kfData, input) {
-    //output object
-    let output = {
-        x: 0,
-        y: 0,
-        angle: 0,
-        mag: 0
-    };
-
-    //if the input is outside the keyframing space,
-    //set the output to the first or last frame
-    if (input <= kfData[0].in) {
-        output.x = kfData[0].x;
-        output.y = kfData[0].y;
-        output.angle = kfData[0].angle;
-        output.mag = kfData[0].mag;
-
-    } else if (input >= kfData[kfData.length - 1].in) {
-        output.x = kfData[kfData.length - 1].x;
-        output.y = kfData[kfData.length - 1].y;
-        output.angle = kfData[kfData.length - 1].angle;
-        output.mag = kfData[kfData.length - 1].mag;
-
-    } else { //use the two frames around it to produce a value
-        for (let i = 1; i < kfData.length; i++) {
-
-            //grab the surrounding frames
-            let lo = kfData[i - 1];
-            let hi = kfData[i];
-
-            //if input is in-between them
-            if (lo.in <= input && input < hi.in) {
-                let p = (input - lo.in) / (hi.in - lo.in);
-                output.x = lo.x + (hi.x - lo.x) * p;
-                output.y = lo.y + (hi.y - lo.y) * p;
-                output.angle = lo.angle + (hi.angle - lo.angle) * p;
-                output.mag = lo.mag + (hi.mag - lo.mag) * p;
-            }
-        }
-    }
-
-    return output;
-}
-
-/* Position an element about its center */
-function positionElement(element, x, y) {
-    //center the element
-    x -= element.width/2;
-    y -= element.height/2;
-
-    //set using the position(x, y) function
-    element.position(x, y);
-}
-
-/* Rotate an element about its center in radians */
-function rotateScaleElement(element, theta, scale=1.0) {
-    //Rotate the element using a css property
-    element.style("transform", `rotate(${theta}rad) scale(${scale})`);
 }
 
 /* Draws the neck using two bezier curves */
