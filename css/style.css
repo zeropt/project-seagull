@@ -21,4 +21,7 @@ body {
 .animation {
     /* Positioning */
     z-index: -1;
+
+    /* For Keyframing */
+    /*opacity: 0.5;*/
 }
