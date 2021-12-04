@@ -27,7 +27,7 @@ let birds = [
             scale: 1.0,
             keyframes: [
                 {in: (-1)*_pi, x: -400, y: -300, angle: (-3/4)*_pi},
-                {in: (-1/2)*_pi, x: 0, y: -600, angle: (-1/2)*_pi},
+                {in: (-1/2)*_pi, x: 0, y: -600, angle: (-1)*_pi},
                 {in: (0)*_pi, x: 500, y: -400, angle: (-1/8)*_pi}
             ]
         },
@@ -60,14 +60,14 @@ let birds = [
         name: "Bonaparte's Gull",
         description: "",
         body: {
-            src: "img/western-gull-body.png",
+            src: "img/bonaparte-gull-body.png",
             scale: 1.0,
             keyframes: [
                 {in: (0)*_pi, x: 0, y: -106, angle: (0)*_pi}
             ]
         },
         head: {
-            src: "img/western-gull-head.png",
+            src: "img/bonaparte-gull-head.png",
             scale: 1.0,
             keyframes: [
                 {in: (-1)*_pi, x: -400, y: -300, angle: (-3/4)*_pi},
@@ -76,7 +76,7 @@ let birds = [
             ]
         },
         jaw: {
-            src: "img/western-gull-jaw.png",
+            src: "img/bonaparte-gull-jaw.png",
             scale: 1.0,
             keyframes: [
                 {in: (-1)*_pi, x: 0, y: 80, angle: (-1/4)*_pi},

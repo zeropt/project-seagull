@@ -10,7 +10,7 @@ const DEBUG = true;
 //Global variables
 let canvas;
 let pivot;
-let scale;
+let SCALE;
 let scremThresh;
 let SCREM;
 
@@ -64,6 +64,9 @@ function setup() {
     //Set the scale
     updateScale();
 
+    //update the background image
+    updateBackground();
+
     //Set initial bird index
     birdIndex = 0;
 
@@ -95,6 +98,9 @@ function windowResized() {
 
     //Update the scale
     updateScale();
+
+    //update the background image
+    updateBackground();
 }
 
 /* Runs every cycle */
@@ -115,10 +121,13 @@ function draw() {
 
     //Shake vector
     let shake = createVector(0, 0);
-    if (SCREM) shake = shakeVector(shakeMag*scale);
+    if (SCREM) shake = shakeVector(shakeMag*SCALE);
 
     //Draw the animation
-    drawBird(birds[birdIndex], theta, shake, scale);
+    drawBird(birds[birdIndex], theta, shake, SCALE);
+
+    //Draw guides
+    drawGuides(theta, SCALE);
 }
 
 /* Create the image elements */
@@ -210,6 +219,25 @@ function drawBird(bird, input, shift, scale=1.0) {
         p2, c2, bird.neck.headEnd.width*scale);
 }
 
+/* Draws keyframing guides */
+function drawGuides(theta, scale) {
+    push();
+    //draw settings
+    strokeWeight(1);
+    stroke(0);
+    noFill();
+
+    //Box
+    let w = scale*1000;
+    rect(pivot.x - w/2, pivot.y - w, w, w);
+
+    //line
+    let v = createVector(w, 0);
+    v.setHeading(theta);
+    line(pivot.x, pivot.y, pivot.x + v.x, pivot.y + v.y);
+    pop();
+}
+
 /* Updates the pivot position */
 function updatePivot() {
     pivot.set(width/2, height);
@@ -217,8 +245,16 @@ function updatePivot() {
 
 /* Updates the scale to minDimension/1000 */
 function updateScale() {
-    if (width < height) scale = width/1000;
-    else scale = height/1000;
+    if (width < height) SCALE = width/1000;
+    else SCALE = height/1000;
+}
+
+/* Updates the background image */
+function updateBackground() {
+    if (DEBUG) console.log("Updating the background image!");
+    let bg = select("#background-img");
+    bg.size(AUTO, SCALE*1000);
+    positionElement(bg, width/2, height - (SCALE*1000)/2);
 }
 
 /* Returns a random vector used for shaking */
