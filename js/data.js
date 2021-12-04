@@ -14,7 +14,7 @@ let birds = [
 
     {
         name: "Western Gull",
-        description: "",
+        description: "The Western Gull is native to the upper half of the west coast of the U.S; ranging from central California to Washington. These trash goblins of the marine environment are omnivores, providing these opportunistic birds a wide variety of food sources. From fishing scraps to literal garbage dump treasure, there isn’t much these gulls won’t swallow down their gullet! In fact, they’ve also been noted to eat other adult birds and marine animal bi-products! So if you or someone you know is being picky, just know this little fellow would be happy to pick up your leftovers.",
         body: {
             src: "img/western-gull-body.png",
             scale: 1.0,
