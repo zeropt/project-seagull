@@ -179,7 +179,7 @@ function updateScale() {
 
 /* Updates the pivot position */
 function updatePivot() {
-    let xOffset = -140*SCALE;
+    let xOffset = -190*SCALE;
     let yOffset = -300*SCALE;
     pivot.set(width/2 + xOffset, height + yOffset);
 }
@@ -189,7 +189,7 @@ function updateBackground() {
     if (DEBUG) console.log("Updating the background image!");
     let bg = select("#background-img");
     bg.size(AUTO, SCALE*1000);
-    let xOffset = 200*SCALE;
+    let xOffset = 150*SCALE;
     let yOffset = -500*SCALE;
     positionElement(bg, width/2 + xOffset, height + yOffset);
 }
