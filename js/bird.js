@@ -75,7 +75,7 @@ function setup() {
     animationHeading.spMax = -(1/4)*PI;
 
     //Screm Variables
-    scremThresh = -(3/8)*PI;
+    scremThresh = -(5/16)*PI;
     SCREM = false;
 
     //p5 settings
@@ -112,6 +112,14 @@ function draw() {
     //Shake vector
     let shake = createVector(0, 0);
     if (SCREM) shake = shakeVector(shakeMag*SCALE);
+
+    //Background
+    if (SCREM) {
+        //recenter
+        updateBackground();
+        //shift
+        shiftBackground(shake);
+    }
 
     //Draw the animation
     drawBird(birds[birdIndex], theta, shake, SCALE);
@@ -186,7 +194,7 @@ function updateBackground() {
     positionElement(bg, width/2 + xOffset, height + yOffset);
 }
 
-/******************** Utility Functions ********************/
+/******************** ShAaAaAaKe ********************/
 
 /* Returns a random vector used for shaking */
 function shakeVector(maxMag) {
@@ -195,6 +203,15 @@ function shakeVector(maxMag) {
     v.setMag(random(maxMag));
     return v;
 }
+
+/* Shakes the background */
+function shiftBackground(shift) {
+    let bg = select("#background-img");
+    let pos = bg.position();
+    bg.position(pos.x + shift.x, pos.y + shift.y);
+}
+
+/******************** Utility Functions ********************/
 
 /* Calculates the the pointer heading */
 function pointerHeading(origin) {
@@ -298,7 +315,6 @@ function drawBird(bird, input, shift, scale=1.0) {
     vJaw.mult(scale);
     vJaw.rotate(headPos.angle);
     vJaw.add(vHead);
-    vJaw.add(shift);
     let jaw = select("#jaw-img");
     positionElement(jaw, vJaw.x, vJaw.y);
     rotateScaleElement(
@@ -311,7 +327,6 @@ function drawBird(bird, input, shift, scale=1.0) {
     p1.rotate(bodyPos.angle);
     p1.mult(scale);
     p1.add(vBody);
-    p1.add(shift);
     let c1 = createVector(bodyNeckPos.mag, 0);
     c1.setHeading(bodyPos.angle + bodyNeckPos.angle);
     c1.mult(scale);
@@ -321,7 +336,6 @@ function drawBird(bird, input, shift, scale=1.0) {
     p2.rotate(headPos.angle);
     p2.mult(scale);
     p2.add(vHead);
-    p2.add(shift);
     let c2 = createVector(headNeckPos.mag, 0);
     c2.setHeading(headPos.angle + headNeckPos.angle);
     c2.mult(scale);
