@@ -6,6 +6,9 @@ body {
 
     /* Layout */
     overflow: hidden;
+
+    /* Font */
+    font-family: 'Secular One', 'Trebuchet MS', sans-serif;
 }
 
 #background-img {
@@ -24,4 +27,16 @@ body {
 
     /* For Keyframing */
     /*opacity: 0.5;*/
+}
+
+#title {
+    /* Positioning */
+    position: absolute;
+    margin: 0px;
+    top: 2%;
+    left: 2%;
+
+    /* Text */
+    color: #ABABAB;
+    font-size: 4vw;
 }
