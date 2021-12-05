@@ -13,20 +13,30 @@ body {
 
 #background-img {
     /* Positioning */
-    z-index: -3;
+    z-index: -4;
 }
 
 .p5Canvas {
     /* Positioning */
-    z-index: -2;
+    z-index: -3;
 }
 
 .animation {
     /* Positioning */
-    z-index: -1;
+    z-index: -2;
 
     /* For Keyframing */
     /*opacity: 0.5;*/
+}
+
+#screen {
+    /* Positioning */
+    z-index: -1;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
 }
 
 #title {
@@ -39,4 +49,17 @@ body {
     /* Text */
     color: #ABABAB;
     font-size: 4vw;
+}
+
+#sign {
+    /* Positioning */
+    position: absolute;
+    width: 10%;
+    height: 10%;
+    bottom: 5%;
+    left: 50%;
+    transform: rotate(-0.25rad);
+
+    /* Background */
+    background-color: gray;
 }
