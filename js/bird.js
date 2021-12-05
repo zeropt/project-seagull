@@ -117,7 +117,7 @@ function draw() {
     drawBird(birds[birdIndex], theta, shake, SCALE);
 
     //Draw guides
-    drawGuides(theta, SCALE);
+    //drawGuides(theta, SCALE);
 }
 
 /******************** Bird Element Functions ********************/
