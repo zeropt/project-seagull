@@ -63,3 +63,15 @@ body {
     /* Background */
     background-color: gray;
 }
+
+#link-list {
+    /* Positioning */
+    position: absolute;
+    top: 10%;
+    left: 2%;
+    margin: 0px;
+    padding: 0px;
+
+    /* List stuff */
+    list-style-type: none;
+}
