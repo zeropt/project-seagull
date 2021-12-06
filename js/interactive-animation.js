@@ -11,8 +11,11 @@ const DEBUG = true;
 let canvas;
 let pivot;
 let SCALE;
+let updateThresh;
 let scremThresh;
-let SCREM;
+let SCREM = false;
+let SCREMING = false;
+let thetaPrev = 0;
 
 const shakeMag = 20;
 
@@ -74,12 +77,13 @@ function setup() {
     animationHeading.spMin = -(3/4)*PI;
     animationHeading.spMax = -(1/4)*PI;
 
-    //Screm Variables
+    //Screm Variables and thresholds
+    updateThresh = 0.001;
     scremThresh = -(5/16)*PI;
-    SCREM = false;
 
     //p5 settings
     noStroke(); //No Stroke border
+    clear(); //CLear the screen
 }
 
 /* Runs on screen resize */
@@ -94,9 +98,6 @@ function windowResized() {
 
 /* Runs every cycle */
 function draw() {
-    //Clear the screen
-    clear();
-
     //Calculate the pointer heading
     let pointerTheta = pointerHeading(pivot);
     if (pointerTheta > 0.0) pointerTheta *= -1.0;
@@ -105,27 +106,43 @@ function draw() {
     animationHeading.update(pointerTheta);
     let theta = animationHeading.get();
 
-    //Check for screm
-    SCREM = (theta >= scremThresh);
-    if (DEBUG && SCREM) console.log("SCREM!");
+    //If theta was updated, update the animation
+    if (abs(theta-thetaPrev) >= updateThresh) updateBird(theta);
 
-    //Shake vector
-    let shake = createVector(0, 0);
-    if (SCREM) shake = shakeVector(shakeMag*SCALE);
-
-    //Background
+    //Shake if SCREM
     if (SCREM) {
-        //recenter
+        SCREMING = true;
         updateBackground();
-        //shift
-        shiftBackground(shake);
+        updateBird(theta);
+        shiftAll(shakeMag);
+    } else {
+        if (SCREMING) {
+            SCREMING = false;
+            canvas.position(0, 0);
+            updateBackground();
+            updateBird(theta);
+        }
     }
 
+    //update thetaPrev
+    thetaPrev = theta;
+}
+
+/* callable when the animation needs to be updated */
+function updateBird(theta) {
+    if (DEBUG) console.log("reDrawing");
+
+    //Clear the screen
+    clear();
+
+    //update SCREM
+    SCREM = (theta >= scremThresh);
+
     //Draw the animation
-    drawBird(birds[birdIndex], theta, shake, SCALE);
+    drawBird(birds[birdIndex], theta);
 
     //Draw guides
-    //drawGuides(theta, SCALE);
+    //drawGuides(theta);
 }
 
 /******************** Bird Element Functions ********************/
@@ -192,23 +209,6 @@ function updateBackground() {
     let xOffset = 150*SCALE;
     let yOffset = -500*SCALE;
     positionElement(bg, width/2 + xOffset, height + yOffset);
-}
-
-/******************** ShAaAaAaKe ********************/
-
-/* Returns a random vector used for shaking */
-function shakeVector(maxMag) {
-    //Random direction
-    let v = p5.Vector.random2D();
-    v.setMag(random(maxMag));
-    return v;
-}
-
-/* Shakes the background */
-function shiftBackground(shift) {
-    let bg = select("#background-img");
-    let pos = bg.position();
-    bg.position(pos.x + shift.x, pos.y + shift.y);
 }
 
 /******************** Utility Functions ********************/
@@ -288,66 +288,62 @@ function rotateScaleElement(element, theta, scale=1.0) {
 /******************** Bird Drawing Functions ********************/
 
 /* Draws the animation */
-function drawBird(bird, input, shift, scale=1.0) {
+function drawBird(bird, input) {
     //Position the body
     let bodyPos = keyframeMap(bird.body.keyframes, input);
     let vBody = createVector(bodyPos.x, bodyPos.y);
-    vBody.mult(scale);
+    vBody.mult(SCALE);
     vBody.add(pivot);
-    vBody.add(shift);
     let body = select("#body-img");
     positionElement(body, vBody.x, vBody.y);
-    rotateScaleElement(body, bodyPos.angle, bird.body.scale*scale);
+    rotateScaleElement(body, bodyPos.angle, bird.body.scale*SCALE);
 
     //Position the head
     let headPos = keyframeMap(bird.head.keyframes, input);
     let vHead = createVector(headPos.x, headPos.y);
-    vHead.mult(scale);
+    vHead.mult(SCALE);
     vHead.add(pivot);
-    vHead.add(shift);
     let head = select("#head-img");
     positionElement(head, vHead.x, vHead.y);
-    rotateScaleElement(head, headPos.angle, bird.head.scale*scale);
+    rotateScaleElement(head, headPos.angle, bird.head.scale*SCALE);
 
     //Position the jaw
     let jawPos = keyframeMap(bird.jaw.keyframes, input);
     let vJaw = createVector(jawPos.x, jawPos.y);
-    vJaw.mult(scale);
+    vJaw.mult(SCALE);
     vJaw.rotate(headPos.angle);
     vJaw.add(vHead);
     let jaw = select("#jaw-img");
     positionElement(jaw, vJaw.x, vJaw.y);
     rotateScaleElement(
-        jaw, headPos.angle + jawPos.angle, bird.jaw.scale*scale);
+        jaw, headPos.angle + jawPos.angle, bird.jaw.scale*SCALE);
 
     //Draw the neck
     //body neck
     let bodyNeckPos = keyframeMap(bird.neck.bodyEnd.keyframes, input);
     let p1 = createVector(bodyNeckPos.x, bodyNeckPos.y);
     p1.rotate(bodyPos.angle);
-    p1.mult(scale);
+    p1.mult(SCALE);
     p1.add(vBody);
     let c1 = createVector(bodyNeckPos.mag, 0);
     c1.setHeading(bodyPos.angle + bodyNeckPos.angle);
-    c1.mult(scale);
+    c1.mult(SCALE);
     //head neck
     let headNeckPos = keyframeMap(bird.neck.headEnd.keyframes, input);
     let p2 = createVector(headNeckPos.x, headNeckPos.y);
     p2.rotate(headPos.angle);
-    p2.mult(scale);
+    p2.mult(SCALE);
     p2.add(vHead);
     let c2 = createVector(headNeckPos.mag, 0);
     c2.setHeading(headPos.angle + headNeckPos.angle);
-    c2.mult(scale);
+    c2.mult(SCALE);
     //draw!
-    //console.log(`1: (${p1.x}, ${p1.y}), (${c1.x}, ${c1.y}), ${bird.neck.bodyEnd.width}`);
-    //console.log(`2: (${p2.x}, ${p2.y}), (${c2.x}, ${c2.y}), ${bird.neck.headEnd.width}`);
-    drawNeck(bird.neck.color, p1, c1, bird.neck.bodyEnd.width*scale,
-        p2, c2, bird.neck.headEnd.width*scale);
+    drawNeck(bird.neck.color, p1, c1, bird.neck.bodyEnd.width*SCALE,
+        p2, c2, bird.neck.headEnd.width*SCALE);
 }
 
 /* Draws keyframing guides */
-function drawGuides(theta, scale) {
+function drawGuides(theta) {
     push();
     //draw settings
     strokeWeight(1);
@@ -355,7 +351,7 @@ function drawGuides(theta, scale) {
     noFill();
 
     //Box
-    let w = scale*1000;
+    let w = SCALE*1000;
     rect(pivot.x - w/2, pivot.y - w/2, w, w);
 
     //line
@@ -399,4 +395,59 @@ function drawNeck(color, p1, c1, w1, p2, c2, w2) {
     bezier(b1.x, b1.y, b1.x + c1.x, b1.y + c1.y,
         b2.x + c2.x, b2.y + c2.y, b2.x, b2.y);
     pop(); //end
+}
+
+/******************** ShAaAaAaKe ********************/
+
+/* shifts everything by a shake vector */
+function shiftAll(mag) {
+    //create the shake vector
+    let v = shakeVector(mag);
+
+    //shift the background
+    shiftBackground(v);
+
+    //shift the canvas
+    shiftCanvas(v);
+
+    //shift the bird
+    shiftBird(v);
+}
+
+/* Returns a random vector used for shaking */
+function shakeVector(mag) {
+    //Random direction
+    let v = p5.Vector.random2D();
+    v.setMag(random(mag));
+    return v;
+}
+
+/* Shakes the background */
+function shiftBackground(v) {
+    let bg = select("#background-img");
+    let pos = bg.position();
+    bg.position(pos.x + v.x, pos.y + v.y);
+}
+
+/* Shakes the Canvas */
+function shiftCanvas(v) {
+    canvas.position(v.x, v.y);
+}
+
+/* Shakes the Bird */
+function shiftBird(v) {
+    let elem;
+    let pos;
+    //body
+    elem = select("#body-img");
+    pos = elem.position();
+    elem.position(pos.x + v.x, pos.y + v.y);
+    //head
+    elem = select("#head-img");
+    pos = elem.position();
+    elem.position(pos.x + v.x, pos.y + v.y);
+    //jaw
+    elem = select("#jaw-img");
+    pos = elem.position();
+    elem.position(pos.x + v.x, pos.y + v.y);
 }
