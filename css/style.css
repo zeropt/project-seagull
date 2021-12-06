@@ -40,6 +40,12 @@ body {
 
     /* Background */
     background-color: red;
+    opacity: 0.0;
+}
+
+#eye-img {
+    /* Starting opacity */
+    opacity: 0.0;
 }
 
 #title {
@@ -50,8 +56,12 @@ body {
     left: 2%;
 
     /* Text */
-    color: dimgray;
+    color: skyblue;
     font-size: 4vw;
+}
+
+#title.red {
+    color: #876A87;
 }
 
 #sign {

@@ -23,7 +23,7 @@ const shakeMag = 20;
 
 //Animation Heading
 let animationHeading = {
-    theta: 0.0,
+    theta: -1.6,
     spMin: 0.0,
     spMax: 7.0,
     w: 0.0,
@@ -517,10 +517,12 @@ function allRed() {
     let flicker = random(50, 55);
     select("#screen").style("opacity", flicker/100.0);
     select("#eye-img").style("opacity", 1.0);
+    select("#title").addClass("red");
 }
 
 /* Disables the eye */
 function defuse() {
     select("#screen").style("opacity", 0.0);
     select("#eye-img").style("opacity", 0.0);
+    select("#title").removeClass("red");
 }
