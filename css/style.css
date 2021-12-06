@@ -56,15 +56,24 @@ body {
 
 #sign {
     /* Positioning */
-    position: absolute;
-    width: 10%;
-    height: 10%;
-    bottom: 5%;
-    left: 50%;
-    transform: rotate(-0.25rad);
+    transform: rotate(-0.28rad);
+    padding-top: 5%;
+
+    /* Text */
+    color: #594834;
+    text-align: center;
 
     /* Background */
-    background-color: dimgray;
+    /*background-color: dimgray;
+    opacity: 0.5;*/
+
+    /* Cursor */
+    cursor: pointer;
+}
+
+#sign:hover {
+    /* Text */
+    color: #6D5C48;
 }
 
 #link-list {
@@ -97,4 +106,91 @@ body {
     /* Positioning */
     width:  2vw;
     height:  auto;
+}
+
+#popup-div {
+    /* Positioning */
+    position: absolute;
+    width: 90%;
+    height:  90%;
+    margin-left: 4vw;
+    margin-top: 4vh;
+
+    /* Background */
+    background-color: white;
+    opacity: 0.8;
+
+    /* Border */
+    border: 0px solid;
+    border-radius: 1vw;
+}
+
+#popup-div img {
+    /* Cursor */
+    cursor: pointer;
+}
+
+#popup-div img:hover {
+    opacity: 0.5;
+}
+
+#left-cycler {
+    /* Positioning */
+    position: absolute;
+    width: 2vw;
+    height: auto;
+    left: 4vw;
+    top: 40vh;
+
+    /* Color */
+    opacity: 1.0;
+}
+
+#right-cycler {
+    /* Positioning */
+    position: absolute;
+    width: 2vw;
+    height: auto;
+    right: 4vw;
+    top: 40vh;
+
+    /* Color */
+    opacity: 1.0;
+}
+
+#exit-button {
+    /* Positioning */
+    position: absolute;
+    padding: 0px;
+    margin: 0px;
+    right: 1vw;
+    top: 1vh;
+
+    /* Text */
+    color: dimgray;
+    font-size: 2vw;
+    opacity: 1.0;
+}
+
+#exit-button:hover {
+    cursor: pointer;
+    opacity: 0.5;
+}
+
+#info-div {
+    /* Positioning */
+    width: 80%;
+    margin: auto;
+
+    /* Text */
+    text-align: center;
+    color: black;
+}
+
+#info-div h2 {
+    font-size: 4vw;
+}
+
+#info-div p {
+    font-size: 1.8vw;
 }

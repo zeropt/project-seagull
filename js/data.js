@@ -14,7 +14,7 @@ let birds = [
 
     {
         name: "Western Gull",
-        description: "The Western Gull is native to the upper half of the west coast of the U.S; ranging from central California to Washington. These trash goblins of the marine environment are omnivores, providing these opportunistic birds a wide variety of food sources. From fishing scraps to literal garbage dump treasure, there isn’t much these gulls won’t swallow down their gullet! In fact, they’ve also been noted to eat other adult birds and marine animal bi-products! So if you or someone you know is being picky, just know this little fellow would be happy to pick up your leftovers.",
+        description: "The Western Gull is native to the upper half of the west coast of the U.S; ranging from central California to Washington. These trash goblins of the marine environment are omnivores, providing these opportunistic birds a wide variety of food sources. From fishing scraps to literal garbage dump treasure, there isn't much these gulls won't swallow down their gullet! In fact, they've also been noted to eat other adult birds and marine animal bi-products! So if you or someone you know is being picky, just know this little fellow would be happy to pick up your leftovers.",
         body: {
             src: "img/western-gull-body.png",
             scale: 0.8,
@@ -71,7 +71,7 @@ let birds = [
 
     {
         name: "Bonaparte's Gull",
-        description: "The Bonaparte’s Gull can be found in forests of Canada and Southern regions of Alaska during their nesting season and migrates south to warmer areas of North America in the winter. The audacious Bonaparte’s Gull are unique in the fact that they often nest in the trees because the ground is just not fancy enough for their taste. Unlike their thrifty cousins, the Western Gull, Bonaparte’s Gulls generally are not found foraging garbage dumps like an all-you-can-eat buffet. However, the scavenger blood still flows within them, enacting thievery against smaller coastal birds for a meal. Criminal!",
+        description: "The Bonaparte's Gull can be found in forests of Canada and Southern regions of Alaska during their nesting season and migrates south to warmer areas of North America in the winter. The audacious Bonaparte's Gull are unique in the fact that they often nest in the trees because the ground is just not fancy enough for their taste. Unlike their thrifty cousins, the Western Gull, Bonaparte's Gulls generally are not found foraging garbage dumps like an all-you-can-eat buffet. However, the scavenger blood still flows within them, enacting thievery against smaller coastal birds for a meal. Criminal!",
         body: {
             src: "img/bonaparte-gull-body.png",
             scale: 0.8,
@@ -99,6 +99,13 @@ let birds = [
                 {in: (-0.5)*_pi, x: 79, y: 26, angle: (0.0)*_pi},
                 {in: (-0.25)*_pi, x: 34, y: 82, angle: (0.06)*_pi}
             ]
+        },
+        eye: {
+            src: "img/lens-flare.png",
+            scale: 1.5,
+            x: -30,
+            y: 20,
+            angle: (0.5)*_pi
         },
         neck: {
             color: "#FFFFFF",

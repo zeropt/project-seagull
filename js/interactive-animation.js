@@ -16,6 +16,8 @@ let scremThresh;
 let SCREM = false;
 let SCREMING = false;
 let thetaPrev = 0;
+let ENABLED = true;
+let birdIndexPrev;
 
 const shakeMag = 20;
 
@@ -68,6 +70,7 @@ function setup() {
 
     //Set initial bird index
     birdIndex = 0;
+    birdIndexPrev = birdIndex;
 
     //Image Elements
     createBirdElements();
@@ -101,36 +104,47 @@ function windowResized() {
 
 /* Runs every cycle */
 function draw() {
-    //Calculate the pointer heading
-    let pointerTheta = pointerHeading(pivot);
-    if (pointerTheta > 0.0) pointerTheta *= -1.0;
+    if (ENABLED) {
+        //Calculate the pointer heading
+        let pointerTheta = pointerHeading(pivot);
+        if (pointerTheta > 0.0) pointerTheta *= -1.0;
 
-    //Calculate the animation heading
-    animationHeading.update(pointerTheta);
-    let theta = animationHeading.get();
+        //Calculate the animation heading
+        animationHeading.update(pointerTheta);
+        let theta = animationHeading.get();
 
-    //If theta was updated, update the animation
-    if (abs(theta-thetaPrev) >= updateThresh) updateBird(theta);
+        //If theta was updated, update the animation
+        if (abs(theta-thetaPrev) >= updateThresh) updateBird(theta);
 
-    //Shake if SCREM
-    if (SCREM) {
-        SCREMING = true;
-        updateBackground();
-        updateBird(theta);
-        shiftAll(shakeMag);
-        allRed();
-    } else {
-        if (SCREMING) {
-            SCREMING = false;
-            canvas.position(0, 0);
-            updateBackground();
-            updateBird(theta);
-            defuse();
+        //If birdIndex was updated, update the images
+        if (birdIndex !== birdIndexPrev) {
+            loadSrc(birds[birdIndex]);
+            updateBird();
+            birdIndexPrev = birdIndex;
         }
-    }
 
-    //update thetaPrev
-    thetaPrev = theta;
+        //Shake if SCREM
+        if (SCREM) {
+            SCREMING = true;
+            updateBackground();
+            updateSign();
+            updateBird(theta);
+            shiftAll(shakeMag);
+            allRed();
+        } else {
+            if (SCREMING) {
+                SCREMING = false;
+                canvas.position(0, 0);
+                updateBackground();
+                updateSign();
+                updateBird(theta);
+                defuse();
+            }
+        }
+
+        //update thetaPrev
+        thetaPrev = theta;
+    }
 }
 
 /* callable when the animation needs to be updated */
@@ -195,6 +209,9 @@ function updateStuff() {
 
     //update the background image
     updateBackground();
+
+    //update the sign
+    updateSign();
 }
 
 /* Updates the scale to minDimension/1000 */
@@ -212,12 +229,23 @@ function updatePivot() {
 
 /* Updates the background image */
 function updateBackground() {
-    if (DEBUG) console.log("Updating the background image!");
     let bg = select("#background-img");
     bg.size(AUTO, SCALE*1000);
     let xOffset = 150*SCALE;
     let yOffset = -500*SCALE;
     positionElement(bg, width/2 + xOffset, height + yOffset);
+}
+
+/* Updates the sign */
+function updateSign() {
+    let sign = select("#sign");
+    let w = 620*SCALE;
+    let h = 220*SCALE;
+    sign.size(w, h);
+    let xOffset = -120*SCALE;
+    let yOffset = -100*SCALE;
+    positionElement(sign, width/2 + xOffset, height + yOffset);
+    sign.style("font-size", `${60*SCALE}px`);
 }
 
 /******************** Utility Functions ********************/
@@ -430,6 +458,9 @@ function shiftAll(mag) {
 
     //shift the bird
     shiftBird(v);
+
+    //shift the sign
+    shiftSign(v);
 }
 
 /* Returns a random vector used for shaking */
@@ -450,6 +481,13 @@ function shiftBackground(v) {
 /* Shakes the Canvas */
 function shiftCanvas(v) {
     canvas.position(v.x, v.y);
+}
+
+/* Shakes the Sign */
+function shiftSign(v) {
+    let elem = select("#sign");
+    let pos = elem.position();
+    elem.position(pos.x + v.x, pos.y + v.y);
 }
 
 /* Shakes the Bird */
