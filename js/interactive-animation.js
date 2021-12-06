@@ -240,7 +240,7 @@ function updateBackground() {
 function updateSign() {
     let sign = select("#sign");
     let w = 620*SCALE;
-    let h = 220*SCALE;
+    let h = 170*SCALE;
     sign.size(w, h);
     let xOffset = -120*SCALE;
     let yOffset = -100*SCALE;
