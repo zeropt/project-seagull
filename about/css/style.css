@@ -1,10 +1,46 @@
 body {
- background-image: url("https://raw.githubusercontent.com/zeropt/project-seagull/main/about/img/aboutpagebackground.png");
- background-color: #cccccc;
+  /* Background */
+  background-color: #c4e2FF;
+  background-image: url("https://raw.githubusercontent.com/zeropt/project-seagull/main/about/img/aboutpagebackground.png");
+  overflow: hidden;
+  /* Font */
+  font-family: monospace;
 }
 
 #about {
-  font-family: monospace;
+  /* Positioning */
+  position: absolute;
+  width: 90%;
+  height: 90%;
+  margin-left: 4vw;
+  margin-top: 4vh;
+
+  /* Background */
   background-color: white;
   opacity: 0.6;
+
+  /* Border */
+  border: 0px solid;
+  border-radius: 1vw;
+}
+
+#about * {
+  /* positioning */
+  width: 95%;
+  margin: auto;
+  margin-top: 2vh;
+}
+
+#return-button {
+  /* Positioning */
+  width: 12vw;
+  position: absolute;
+  padding: 0px;
+  margin: 0px;
+  right: 1vw;
+  top: 1vh;
+
+  /* Text */
+  color: dimgray;
+  font-size: 1vw;
 }
