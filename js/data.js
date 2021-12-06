@@ -43,6 +43,13 @@ let birds = [
                 {in: (-0.25)*_pi, x: 20, y: 78, angle: (0.06)*_pi}
             ]
         },
+        eye: {
+            src: "img/lens-flare.png",
+            scale: 1.5,
+            x: -50,
+            y: 30,
+            angle: (0.5)*_pi
+        },
         neck: {
             color: "#FFFFFF",
             bodyEnd: {

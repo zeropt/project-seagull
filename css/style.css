@@ -37,6 +37,9 @@ body {
     height: 100%;
     top: 0px;
     left: 0px;
+
+    /* Background */
+    background-color: red;
 }
 
 #title {

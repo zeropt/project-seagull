@@ -73,6 +73,9 @@ function setup() {
     createBirdElements();
     loadSrc(birds[birdIndex]);
 
+    //defuse the eye
+    defuse();
+
     //Animation Heading
     animationHeading.spMin = -(3/4)*PI;
     animationHeading.spMax = -(1/4)*PI;
@@ -115,12 +118,14 @@ function draw() {
         updateBackground();
         updateBird(theta);
         shiftAll(shakeMag);
+        allRed();
     } else {
         if (SCREMING) {
             SCREMING = false;
             canvas.position(0, 0);
             updateBackground();
             updateBird(theta);
+            defuse();
         }
     }
 
@@ -154,16 +159,19 @@ function createBirdElements() {
     let body = createImg("", "");
     let head = createImg("", "");
     let jaw = createImg("", "");
+    let eye = createImg("", "");
 
     //Set the class
     body.class("animation");
     head.class("animation");
     jaw.class("animation");
+    eye.class("animation");
 
     //Set the IDs
     body.id("body-img");
     head.id("head-img");
     jaw.id("jaw-img");
+    eye.id("eye-img");
 }
 
 /* assigns the image sources */
@@ -172,6 +180,7 @@ function loadSrc(bird) {
     select("#body-img").attribute("src", bird.body.src);
     select("#head-img").attribute("src", bird.head.src);
     select("#jaw-img").attribute("src", bird.jaw.src);
+    select("#eye-img").attribute("src", bird.eye.src);
 }
 
 /******************** Screen Update Functions ********************/
@@ -318,6 +327,15 @@ function drawBird(bird, input) {
     rotateScaleElement(
         jaw, headPos.angle + jawPos.angle, bird.jaw.scale*SCALE);
 
+    //Posisition the eye
+    let vEye = createVector(bird.eye.x, bird.eye.y);
+    vEye.mult(SCALE);
+    vEye.add(vHead);
+    let eye = select("#eye-img");
+    positionElement(eye, vEye.x, vEye.y);
+    rotateScaleElement(
+        eye, bird.eye.angle, bird.eye.scale*SCALE);
+
     //Draw the neck
     //body neck
     let bodyNeckPos = keyframeMap(bird.neck.bodyEnd.keyframes, input);
@@ -450,4 +468,21 @@ function shiftBird(v) {
     elem = select("#jaw-img");
     pos = elem.position();
     elem.position(pos.x + v.x, pos.y + v.y);
+    //eye
+    elem = select("#eye-img");
+    pos = elem.position();
+    elem.position(pos.x + v.x, pos.y + v.y);
+}
+
+/* Eye of a thousand dying stars */
+function allRed() {
+    let flicker = random(50, 55);
+    select("#screen").style("opacity", flicker/100.0);
+    select("#eye-img").style("opacity", 1.0);
+}
+
+/* Disables the eye */
+function defuse() {
+    select("#screen").style("opacity", 0.0);
+    select("#eye-img").style("opacity", 0.0);
 }
