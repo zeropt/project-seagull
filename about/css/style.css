@@ -31,6 +31,19 @@ body {
   margin-top: 2vh;
 }
 
+.scrollable-content{
+  background: white;
+  overflow: scroll;
+  margin: 0 auto;
+  width: 500px;
+  height: 550px;
+}
+
+@media screen and (max-height: 300px) {
+  .scrollable-content{
+      height: 300px;}
+}
+
 #return-button {
   /* Positioning */
   width: 12vw;
