@@ -19,7 +19,8 @@ let birds = [
             src: "img/western-gull-body.png",
             scale: 0.8,
             keyframes: [
-                {in: (0)*_pi, x: -80, y: -150, angle: (0)*_pi}
+                {in: (-0.85)*_pi, x: -80, y: -150, angle: (-0.01)*_pi},
+                {in: (-0.15)*_pi, x: -80, y: -150, angle: (0.01)*_pi}
             ]
         },
         head: {
@@ -78,7 +79,8 @@ let birds = [
             src: "img/bonaparte-gull-body.png",
             scale: 0.8,
             keyframes: [
-                {in: (0)*_pi, x: -80, y: -150, angle: (0)*_pi}
+                {in: (-0.85)*_pi, x: -80, y: -150, angle: (-0.01)*_pi},
+                {in: (-0.15)*_pi, x: -80, y: -150, angle: (0.01)*_pi}
             ]
         },
         head: {
