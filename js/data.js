@@ -38,8 +38,10 @@ let birds = [
             scale: 0.8,
             keyframes: [
                 {in: (-0.75)*_pi, x: 20, y: 78, angle: (0.06)*_pi},
+                {in: (-0.675)*_pi, x: 50, y: 60, angle: (0.03)*_pi},
                 {in: (-0.6)*_pi, x: 65, y: 22, angle: (0.0)*_pi},
                 {in: (-0.5)*_pi, x: 65, y: 22, angle: (0.0)*_pi},
+                {in: (-0.375)*_pi, x: 50, y: 60, angle: (0.03)*_pi},
                 {in: (-0.25)*_pi, x: 20, y: 78, angle: (0.06)*_pi}
             ]
         },
@@ -95,8 +97,10 @@ let birds = [
             scale: 0.8,
             keyframes: [
                 {in: (-0.75)*_pi, x: 34, y: 82, angle: (0.06)*_pi},
+                {in: (-0.675)*_pi, x: 64, y: 64, angle: (0.03)*_pi},
                 {in: (-0.6)*_pi, x: 79, y: 26, angle: (0.0)*_pi},
                 {in: (-0.5)*_pi, x: 79, y: 26, angle: (0.0)*_pi},
+                {in: (-0.375)*_pi, x: 64, y: 64, angle: (0.03)*_pi},
                 {in: (-0.25)*_pi, x: 34, y: 82, angle: (0.06)*_pi}
             ]
         },
