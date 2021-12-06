@@ -5,12 +5,28 @@ body {
   overflow: hidden;
   /* Font */
   font-family: monospace;
+  color: dimgray;
 }
 
 img {
   max-width: 350px;
   height:auto;
   opacity: 1.0;
+}
+
+h2 {
+  /* Positioning */
+  padding-top: 2vw;
+
+  /* Text */
+  font-size: 2vw;
+  color: black;
+}
+
+p {
+  /* Text */
+  font-size: 1.5vw;
+  color: dimgray;
 }
 
 .center {
